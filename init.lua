@@ -119,9 +119,6 @@ vim.opt.showmode = true
 -- Enable break indent
 vim.opt.breakindent = false
 
--- Save undo history
-vim.opt.undofile = true
-
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -151,6 +148,7 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 7
@@ -195,7 +193,11 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<leader>wr', 'gT', { desc = 'Previous tab' })
 vim.keymap.set('n', '<leader>wt', 'gt', { desc = 'Next tab' })
 vim.keymap.set('n', 'n', 'nzz', { desc = 'next match', remap = false })
-vim.keymap.set('n', 'p', 'pzz', { desc = 'previous match', remap = false })
+vim.keymap.set('n', 'N', 'Nzz', { desc = 'previous match', remap = false })
+vim.keymap.set('n', '<C-i>', '<C-i>zz', { desc = 'next jump', remap = false })
+vim.keymap.set('n', '<C-o>', '<C-o>zz', { desc = 'previous jump', remap = false })
+vim.keymap.set('v', '<', '<gv', { desc = 'deindent', remap = false })
+vim.keymap.set('v', '>', '>gv', { desc = 'indent', remap = false })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -347,6 +349,7 @@ require('lazy').setup({
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-telescope/telescope-live-grep-args.nvim' },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -390,6 +393,7 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'live_grep_args')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -398,7 +402,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
       vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[F]ind [S]elect Telescope' })
       vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
-      vim.keymap.set('n', '<leader>f/', builtin.live_grep, { desc = '[F]ind by [G]rep' })
       vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
       vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
       vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
@@ -411,7 +414,13 @@ require('lazy').setup({
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         }
-      end, { desc = '[F]ind [/] in Open Files' })
+      end, { desc = '[F]ind [G]rep in open files' })
+      vim.keymap.set('n', '<leader>f/', require('telescope').extensions.live_grep_args.live_grep_args, { desc = '[F]ind by Grep [/]' })
+      -- vim.keymap.set('n', '<leader>f/', function()
+      --   builtin.live_grep {
+      --     prompt_title = 'Live Grep',
+      --   }
+      -- end, { desc = '[F]ind [/] grep' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fv', ':tabedit ~/.config/nvim/init.lua<cr>', { desc = '[F]ind Neo[V]im files' })
