@@ -198,6 +198,8 @@ vim.keymap.set('n', '<C-i>', '<C-i>zz', { desc = 'next jump', remap = false })
 vim.keymap.set('n', '<C-o>', '<C-o>zz', { desc = 'previous jump', remap = false })
 vim.keymap.set('v', '<', '<gv', { desc = 'deindent', remap = false })
 vim.keymap.set('v', '>', '>gv', { desc = 'indent', remap = false })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'page up', remap = false })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'page down', remap = false })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
