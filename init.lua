@@ -448,6 +448,32 @@ require('lazy').setup({
       end, { desc = '[F]ind [G]rep in open files' })
       vim.keymap.set('n', '<leader>f/', telescope.extensions.live_grep_args.live_grep_args, { desc = '[F]ind by Grep [/]' })
       vim.keymap.set('v', '<leader>f/', require('telescope-live-grep-args.shortcuts').grep_visual_selection, { desc = '[F]ind by Grep [/]' })
+      vim.keymap.set('n', '<leader>fp', function(opts)
+        local grep_under_default_opts = {
+          postfix = ' -F ',
+          quote = true,
+          trim = true,
+        }
+        opts = opts or {}
+        opts = vim.tbl_extend('force', grep_under_default_opts, opts)
+        local text = vim.fn.getreg '*'
+        text = vim.fn.substitute(text, '[ \t\n]\\+', ' ', 'g') -- vim's \s doesn't include newline for some reason?
+        opts['default_text'] = text
+        telescope.extensions.live_grep_args.live_grep_args(opts)
+      end, { desc = '[F]ind by Grep [P]asted from clipboard' })
+      vim.keymap.set('n', '<leader>fc', function(opts)
+        local grep_under_default_opts = {
+          postfix = ' -F ',
+          quote = true,
+          trim = true,
+        }
+        opts = opts or {}
+        opts = vim.tbl_extend('force', grep_under_default_opts, opts)
+        local text = vim.fn.getreg '%'
+        text = vim.fn.substitute(text, '[ \t\n]\\+', ' ', 'g')
+        opts['default_text'] = text
+        telescope.extensions.live_grep_args.live_grep_args(opts)
+      end, { desc = '[F]ind by Grep [C]urrent file name' })
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>fv', ':tabedit ~/.config/nvim/init.lua<cr>', { desc = '[F]ind Neo[V]im files' })
     end,
