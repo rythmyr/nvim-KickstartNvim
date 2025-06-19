@@ -320,16 +320,12 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>l'] = { name = '[L]anguage', _ = 'which_key_ignore' },
-        ['<leader>f'] = { name = '[F]ind', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]indow', _ = 'which_key_ignore' },
-        ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>l', group = '[L]anguage' },
+        { '<leader>f', group = '[F]ind' },
+        { '<leader>w', group = '[W]indow' },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
       }
-      -- visual mode
-      require('which-key').register({
-        ['<leader>g'] = { '[G]it' },
-      }, { mode = 'v' })
     end,
   },
 
