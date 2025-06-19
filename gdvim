@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+
+# in Godot: Editor > Settings > Text Editor > External > Use External = true
+# make sure "show advanced settings" is enabled
+# exect path = /path/to/this/script
+# exec flags = `{file} {line}`
+
+local add_args=""
+if [[ "$2" -ne 0 ]]; then
+	add_args="+$2"
+fi
+
+if [[ $(tmux list-sessions | grep ^godot) ]]; then 
+else
+	echo $?
+	alacritty -e tmux new -s godot -n editor nvim $1 $add_args &
+	echo '1'
+	exit
+fi
+if [[ $(tmux list-windows -t godot | grep editor) ]]; then
+else
+	tmux new-window -n editor nvim $1 $add_args &
+	echo '2'
+	exit
+fi
+echo '3'
+tmux send-keys -t godot:editor Escape ':e ' $1 Enter
+if [[ 0 -ne "$2" ]]; then
+	local all="$@"
+	tmux send-keys -t godot:editor Escape ':' $2 Enter
+	tmux send-keys -t godot:editor Escape 'i' "$all" Enter
+	echo $2
+fi
